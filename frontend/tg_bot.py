@@ -4,8 +4,7 @@ from aiogram import Bot, Dispatcher
 from aiogram.types import Message
 from aiogram.filters import Command
 
-from backend.gemineai import geminiAI
-from tools.file_manager import delete_file
+from backend.gemineai import get_tyan_image
 
 from config import tg_api
 
@@ -36,18 +35,20 @@ async def handle_photo(message: Message):
     file_data = await bot.download_file(file_path)
     image_bytes = file_data.read()
 
-    # Кодируем в base64
-    base64_image = base64.b64encode(image_bytes).decode("utf-8")
+    # Кодируем в base64х
+    base64_image_from_user = base64.b64encode(image_bytes).decode("utf-8")
+    await message.answer(text="Начало генерации фото")
+    # Здесь мы получаем картинку
+    generated_image = get_tyan_image(base64_image=base64_image_from_user, text_input=eng_prompt)
 
-    # Здесь мы получаем картинку и имя временного файла
-    generated_image, name_of_generated_image = geminiAI(base64_image=base64_image, text_input=eng_prompt)
+    if generated_image:
+        # Отправляем сгенерированную фото пользователю
+        await message.answer(text="Сгенерированная фотография")
+        await message.answer_photo(photo=generated_image) # Отправка фото пользователю
+        print(f"Картинка отправлена пользователю: {message.from_user.username}")
+    else:
+        await message.answer(text="Произошла ошибка, попробуйте еще раз или используйте другое фото")
 
-    # Отправляем сгенерированную фото пользователю
-    await message.answer_photo(photo=generated_image)
-    print(f"Картинка отправлена пользователю: {message.from_user.username}")
-
-    # Удаляем временный файл
-    delete_file(name_of_generated_image)
 
 # Функция старта бота
 async def start():
