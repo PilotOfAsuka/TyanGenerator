@@ -8,3 +8,4 @@ load_dotenv()
 google_api = os.getenv("GOOGLE_API")
 tg_api = os.getenv("TG_API")
 
+user_state_file = "users_states.json"
