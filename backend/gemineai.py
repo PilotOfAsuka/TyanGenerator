@@ -1,10 +1,7 @@
-import random
-
 from google import genai
 from google.genai import types
-from PIL import Image
 from io import BytesIO
-from aiogram.types import FSInputFile
+from aiogram.types import BufferedInputFile
 
 from config import google_api
 
@@ -12,7 +9,7 @@ from config import google_api
 client = genai.Client(api_key=google_api)  # Экземпляр клиента для работы с Гуглом
 
 
-def geminiAI(base64_image, text_input):
+def get_tyan_image(base64_image, text_input):
     image = types.Part.from_bytes(data=base64_image, mime_type="image/jpeg")  # считываем картинку из ТГ
 
     # Формируем запрос для гугла
@@ -24,22 +21,24 @@ def geminiAI(base64_image, text_input):
         )
     )
     # Проверка ответа от гугла (Кривая на коленках)
+    print(response.candidates[0].finish_reason)
+
     if response is None:
         print(f"Ответ от сервера пустой")
     else:
+        finish_reason = f"{response.candidates[0].finish_reason}"
 
-        for part in response.candidates[0].content.parts:
-            if part.inline_data is not None:
-                image = Image.open(BytesIO(part.inline_data.data))  # получаем картинку с байт кода от ответа гугла
+        if finish_reason == "FinishReason.STOP":
+            for part in response.candidates[0].content.parts:
+                if part.inline_data is not None:
+                    # Декодируем байты в изображение
+                    image = BytesIO(part.inline_data.data)
+                    print(f"Картинка сгенерирована")
+                    image.seek(0)  # Обязательно перемещаем указатель в начало
 
-                name = f'image_{random.randint(0, 9999)}.png'  # Временное имя для файла
+                    # Готовим изображение для отправки в Telegram
+                    image_tg = BufferedInputFile(image.getvalue(), filename="generated.jpg")
+                    return image_tg  # Возвращаем объект BufferedInputFile
 
-                print(f"Картинка сгенерирована {name}")
-
-                image.save(name)
-
-                print(f'Картинка сохранена {name}')
-
-                image_tg = FSInputFile(name)  # Формируем картинку для отправки в телеграм
-
-                return image_tg, name  # Возвращаем картинку и название временного файла
+        elif finish_reason == "FinishReason.IMAGE_SAFETY":
+            print("Гугл вернул ошибку о безопасности фото")
