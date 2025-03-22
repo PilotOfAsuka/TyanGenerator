@@ -8,4 +8,5 @@ load_dotenv()
 google_api = os.getenv("GOOGLE_API")
 tg_api = os.getenv("TG_API")
 
+
 users_data_file = "users_data.json"

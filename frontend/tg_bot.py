@@ -7,6 +7,7 @@ from frontend.core import bot, dp  # core должен быть в корне п
 
 from tools.user_state_handler import users_data
 
+
 from frontend.text_handler import set_language_dialogue, if_in_generation
 from frontend.keyboards.language_keyboard import language_keyboard
 
@@ -17,6 +18,7 @@ eng_prompt = "Add a realistically styled girlfriend standing next to the existin
 
 # Настраиваем логирование
 logging.basicConfig(level=logging.INFO)
+
 
 
 # Команда /start — просто показывает описание
@@ -76,6 +78,7 @@ async def handle_text_from_user(message: Message):
 
     else:
         logging.info(msg=f"Пользователь {message.from_user.username}, потерялся :)")
+
 
 
 # Запуск бота

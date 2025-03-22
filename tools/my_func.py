@@ -3,6 +3,7 @@ from deep_translator import GoogleTranslator
 
 
 
+
 # Функция для разделения аргументов из строки /команда аргумент1 .... аргументN
 def extract_arguments(command_string):
     # Разделяем строку по пробелу, чтобы отделить команду от аргументов
@@ -43,3 +44,4 @@ def get_id_from_message(msg):
 def rus_to_en(text):
     translated_text = GoogleTranslator(source="ru", target="en").translate(text)
     return translated_text
+
