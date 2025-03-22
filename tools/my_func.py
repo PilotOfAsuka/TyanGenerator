@@ -1,4 +1,6 @@
 import json
+from deep_translator import GoogleTranslator
+
 
 
 
@@ -38,3 +40,8 @@ def save_in_json(dictionary, file_dir):
 
 def get_id_from_message(msg):
     return str(msg.from_user.id)
+
+def rus_to_en(text):
+    translated_text = GoogleTranslator(source="ru", target="en").translate(text)
+    return translated_text
+

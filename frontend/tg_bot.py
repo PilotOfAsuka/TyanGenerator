@@ -1,83 +1,86 @@
-import base64
 import logging
-from aiogram import Bot, Dispatcher
 from aiogram.types import Message
 from aiogram.filters import Command
-from tools.user_state_handler import user_states
-from tools.my_func import get_id_from_message
-from backend.gemineai import get_tyan_image
+from frontend.advanced_prompt import handle_advanced_prompt
+from frontend.photo_handler import handle_photo_generation  # переместил выше
+from frontend.core import bot, dp  # core должен быть в корне проекта
 
-from config import tg_api
+from tools.user_state_handler import users_data
 
-# Это каркас бота в телеграм
 
-rus_prompt = "Добавь девушку (внешность придумай сам) (позу и действие придумай на основе изображеня как бы ты паместил ее), стоящую рядом с существующим человеком)"
-eng_prompt = "Add a girlfriend (think up her appearance yourself) (think up her pose and action based on the image of how you would place her) standing next to an existing person)"
+from frontend.text_handler import set_language_dialogue, if_in_generation
+from frontend.keyboards.language_keyboard import language_keyboard
 
+from frontend.descriptions import get_description
+
+# Промпт по умолчанию
+eng_prompt = "Add a realistically styled girlfriend standing next to the existing person in the image. Generate her appearance, clothing, and pose naturally to match the scene's lighting and perspective. Ensure her positioning, facial expression, and body language suggest a natural and affectionate connection, as if she belongs in the original photo."
+
+# Настраиваем логирование
 logging.basicConfig(level=logging.INFO)
 
-bot = Bot(token=tg_api)
-dp = Dispatcher()
 
-@dp.message(Command("start_generation"))
-async def cmd_generation(message: Message):
-    # здесь будет начало генерации
-    user_states.set_user_state(state="start_generation", user_id=get_id_from_message(message))
-    await message.answer(text="Отправьте фотографию на которую хотите дорисовать тян.")
-    pass
 
-# /start
+# Команда /start — просто показывает описание
 @dp.message(Command("start"))
 async def cmd_start(message: Message):
-    user_states.init_self_states(user_id=get_id_from_message(message))
-    user_states.set_user_state(state="main", user_id=get_id_from_message(message))
-    await message.answer(f"Привет! Я бот который добавит тянку если получится :)\n На ваше изображение.\nВозможны искажения и прочие недочеты.\nОснованно на gemini-2.0-flash-exp от Google!\n")
 
-# Обработка текста
-@dp.message(lambda message: message.text)
-async def handle_text(message: Message):
-    # Обработка текста по состоянию юзера
-    if user_states.get_user_state(user_id=get_id_from_message(message)) == "generation":
-        await message.answer(text="Происходит генерация, подождите...")
-    elif user_states.get_user_state(user_id=get_id_from_message(message)) == "main":
-        await message.answer(text="Используйте команду /start_generation для старта")
-        pass
+    users_data.init_self_states(message=message) # Инициализируем информацию о пользователе при старте
+    users_data.set_user_state(message=message, state="main") # Устанавливаем состаяние main базовое состояние
+
+    # Проверяем установку языка
+    if users_data.get_user_language(message=message) is None:
+        users_data.set_user_state(message=message, state="set_lang") # Устанавливаем состояние "set_lang"
+        await message.answer("Выберите язык / Choose your language:", reply_markup=language_keyboard)
+    else:
+        await message.answer(get_description(lang=users_data.get_user_language(message=message)), parse_mode="HTML")
 
 
-# Обработчик изображений
+# Команда /language — Для выбора языка
+@dp.message(Command("language"))
+async def cmd_language(message: Message):
+    if users_data.compare_self_state(message=message, state="main"):
+        users_data.set_user_state(message=message, state="set_lang")  # Устанавливаем состояние "set_lang"
+        await message.answer("Выберите язык / Choose your language:", reply_markup=language_keyboard)
+
+
+
+# Команда /advancedprompt — Для расширенного выбора
+@dp.message(Command("advancedprompt"))
+async def cmd_advanced_prompt(message: Message):
+    await handle_advanced_prompt(message)
+
+# Команда /start_generation
+@dp.message(Command("start_generation"))
+async def start_generation(message: Message):
+    if users_data.compare_self_state(message=message, state="main"):
+        users_data.set_user_state(message=message, state="start_generation")
+        await message.answer(text="Можете теперь отправить фото.")
+
+
+# отправка промпта и фото в photo_handler.py
 @dp.message(lambda message: message.photo)
 async def handle_photo(message: Message):
-    if user_states.get_user_state(user_id=get_id_from_message(message)) == "start_generation":
-        photo = message.photo[-1]  # Берем наибольшее по размеру изображение
-        file = await bot.get_file(photo.file_id)
-        file_path = file.file_path
+    if users_data.compare_self_state(message=message, state="start_generation"):
+        advance_prompt = users_data.get_user_prompt(message=message)
+        await handle_photo_generation(message, eng_prompt)
 
-        # Загружаем файл в память
-        file_data = await bot.download_file(file_path)
-        image_bytes = file_data.read()
 
-        # Кодируем в base64х
-        base64_image_from_user = base64.b64encode(image_bytes).decode("utf-8")
+# Обработка текстовых сообщений от пользователя
+@dp.message(lambda message: message.text)
+async def handle_text_from_user(message: Message):
+    # Проверяем что пользователь находится в состоянии установки языка для обработки входящих текстов от кнопок
+    if users_data.compare_self_state(message=message, state="set_lang"):
+        await set_language_dialogue(message=message)
+    # Проверяем что пользователь находится в состоянии генерации
+    elif users_data.compare_self_state(message=message, state="ingeneration"):
+        await if_in_generation(message=message)
 
-        await message.answer(text="Начало генерации фото")
-        user_states.set_user_state(state="generation", user_id=get_id_from_message(message))
-        # Здесь мы получаем картинку
-        generated_image = get_tyan_image(base64_image=base64_image_from_user, text_input=eng_prompt)
-
-        if generated_image:
-            # Отправляем сгенерированную фото пользователю
-            await message.answer(text="Сгенерированная фотография")
-            await message.answer_photo(photo=generated_image) # Отправка фото пользователю
-            print(f"Картинка отправлена пользователю: {message.from_user.username}")
-            user_states.set_user_state(state="main", user_id=get_id_from_message(message))
-        else:
-            await message.answer(text="Произошла ошибка, попробуйте еще раз или используйте другое фото")
-            user_states.set_user_state(state="main", user_id=get_id_from_message(message))
     else:
-        await message.answer(text="Используйте команду /start_generation для старта")
+        logging.info(msg=f"Пользователь {message.from_user.username}, потерялся :)")
 
 
-# Функция старта бота
+
+# Запуск бота
 async def start():
     await dp.start_polling(bot)
-
