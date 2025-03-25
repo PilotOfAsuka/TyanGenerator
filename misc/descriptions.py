@@ -10,7 +10,7 @@ f"3️⃣ Get your girlfriend picture in seconds! 🥰🌸\n"
 f"\n"
 f"🎀 Perfect for fun edits, memes, or just for laughs! 💕\n"
 f"\n"
-f"Use command /start_generation to start! ⬇️✨\n")
+)
 
 description_ru =(
 f"🌸 Waify Snap Бот 🌸\n"
@@ -24,9 +24,9 @@ f"3️⃣ Получите фотографию своей девушки за �
 f"\n"
 f"🎀 Идеально подходит для забавных правок, мемов или просто смеха! 💕\n"
 f"\n"
-f"Для запуска используйте команду /start_generation! ⬇️✨\n"
 )
 
 def get_description(lang):
     if lang == "ru": return description_ru
     elif lang == "en": return description_eng
+    else: return "Not have a description"
