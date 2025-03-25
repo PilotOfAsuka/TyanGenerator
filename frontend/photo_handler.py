@@ -3,7 +3,8 @@ import logging
 from backend.gemineai import get_tyan_image
 from aiogram.types import Message
 from tools.my_func import get_id_from_message
-from frontend.core import bot
+from misc.core import bot
+from frontend.keyboards.menu_gen import menuConstructor
 
 from tools.user_state_handler import users_data
 
@@ -21,7 +22,7 @@ async def handle_photo_generation(message: Message, prompt: str):
 
     base64_image = base64.b64encode(image_bytes).decode("utf-8")
 
-    await message.answer(text="Генерация изображения...")
+    editable_msg = await message.answer(text="Генерация изображения...")
 
     users_data.set_user_state(message=message, state="ingeneration")
 
@@ -30,8 +31,10 @@ async def handle_photo_generation(message: Message, prompt: str):
     if generated_image:
         logging.info(f"[{user_id}] Успешно сгенерировано изображение для @{username}")
         users_data.set_user_state(message=message, state="main")
-        await message.answer_photo(photo=generated_image)
+        await editable_msg.delete()
+        await message.answer_photo(photo=generated_image, reply_markup=menuConstructor.get_menu("main_menu"), caption="Сгенерированное изображение")
     else:
         logging.error(f"[{user_id}] Ошибка генерации изображения для @{username}")
         users_data.set_user_state(message=message, state="main")
-        await message.answer(text="Произошла ошибка. Попробуйте снова.")
+        await editable_msg.delete()
+        await message.answer(text="Произошла ошибка. Попробуйте снова.", reply_markup=menuConstructor.get_menu("main_menu"))
