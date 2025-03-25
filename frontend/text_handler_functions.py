@@ -2,6 +2,7 @@ from tools.user_state_handler import users_data
 from misc.descriptions import get_description
 import logging
 from frontend.keyboards.menu_gen import menuConstructor
+from frontend.advanced_prompt import handle_advanced_prompt
 
 
 # Здесь отдельные функции обработки текста
@@ -9,7 +10,7 @@ from frontend.keyboards.menu_gen import menuConstructor
 logging.basicConfig(level=logging.INFO)
 
 async def if_in_generation(message):
-    await message.answer(text="Дождитесь конца генерации...")
+    await message.answer(text="Дождитесь конца генерации...\nЕсли генерация занимает больше минуты (Что не должно быть) напишите /start") # users_data.set_user_state(message=message, state="main")
 
 async def set_language_dialogue(message):
     if message.text.lower() == "русский":
@@ -31,7 +32,7 @@ async def in_main_state(message):
         await message.answer(text="Можете теперь отправить фото.")
     elif message.text.lower() == menuConstructor.get_button_text(menu_name="main_menu", index=1).lower():
         # Тут будет переход в состояние генерации Адванц промпт
-        await message.answer(text="Это функция еще в разработке", reply_markup=menuConstructor.get_menu("main_menu"))
+        await handle_advanced_prompt(message)
 
     elif message.text.lower() == menuConstructor.get_button_text(menu_name="main_menu", index=2).lower():
         users_data.set_user_state(message=message, state="set_lang")

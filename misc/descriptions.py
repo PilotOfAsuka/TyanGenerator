@@ -7,9 +7,11 @@ f"📸 How it works?\n"
 f"1️⃣ Send me a photo of a person 📷\n"
 f"2️⃣ I'll add an adorable girl to the image! 🎨💫\n"
 f"3️⃣ Get your girlfriend picture in seconds! 🥰🌸\n"
+f"📷 For best results, send a clear photo with one person visible. Bright lighting and no filters work best! ✨\n"
 f"\n"
 f"🎀 Perfect for fun edits, memes, or just for laughs! 💕\n"
 f"\n"
+f"For quick start Press Start Generation or press Advanced Prompt Settings for Advanced Settings ⬇️✨\n"
 )
 
 description_ru =(
@@ -22,11 +24,13 @@ f"1️⃣ Отправьте мне фотографию человека 📷\n
 f"2️⃣ Я добавлю к изображению очаровательную девочку! 🎨💫\n"
 f"3️⃣ Получите фотографию своей девушки за считанные секунды! 🥰🌸\n"
 f"\n"
+f"📷 Чтобы получить лучший результат, отправьте чёткое фото с одним человеком. Яркое освещение — идеально! ✨\n"
 f"🎀 Идеально подходит для забавных правок, мемов или просто смеха! 💕\n"
 f"\n"
+f"Для быстрого старта нажмите Start Generation или нажмите Advanced Prompt Settings для Расширенных настроек ⬇️✨\n"
 )
 
 def get_description(lang):
     if lang == "ru": return description_ru
     elif lang == "en": return description_eng
-    else: return "Not have a description"
+    else: return "Not have a description" #Илья Плохо знает англиский...

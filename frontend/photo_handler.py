@@ -32,9 +32,9 @@ async def handle_photo_generation(message: Message, prompt: str):
         logging.info(f"[{user_id}] Успешно сгенерировано изображение для @{username}")
         users_data.set_user_state(message=message, state="main")
         await editable_msg.delete()
-        await message.answer_photo(photo=generated_image, reply_markup=menuConstructor.get_menu("main_menu"), caption="Ваше изображение сгенерированo\nДля повтора нажмите start generation")
+        await message.answer_photo(photo=generated_image, reply_markup=menuConstructor.get_menu("main_menu"), caption="Ваше изображение сгенерированo\nЧтобы начать заново, нажмите Start Generation или Advanced Prompt Settings.")
     else:
         logging.error(f"[{user_id}] Ошибка генерации изображения для @{username}")
         users_data.set_user_state(message=message, state="main")
         await editable_msg.delete()
-        await message.answer(text="Произошла ошибка. Попробуйте снова.", reply_markup=menuConstructor.get_menu("main_menu"))
+        await message.answer(text="Генерация была прервана. Чтобы продолжить работу с ботом, выберите Start Generation или Advanced Prompt Settings и начните заново.", reply_markup=menuConstructor.get_menu("main_menu"))
