@@ -32,7 +32,7 @@ async def handle_photo_generation(message: Message, prompt: str):
         logging.info(f"[{user_id}] Успешно сгенерировано изображение для @{username}")
         users_data.set_user_state(message=message, state="main")
         await editable_msg.delete()
-        await message.answer_photo(photo=generated_image, reply_markup=menuConstructor.get_menu("main_menu"), caption="Сгенерированное изображение")
+        await message.answer_photo(photo=generated_image, reply_markup=menuConstructor.get_menu("main_menu"), caption="Ваше изображение сгенерированo\nДля повтора нажмите start generation")
     else:
         logging.error(f"[{user_id}] Ошибка генерации изображения для @{username}")
         users_data.set_user_state(message=message, state="main")
