@@ -11,7 +11,7 @@ f"📷 For best results, send a clear photo with one person visible. Bright ligh
 f"\n"
 f"🎀 Perfect for fun edits, memes, or just for laughs! 💕\n"
 f"\n"
-f"For quick start Press Start Generation or press Advanced Prompt Settings for Advanced Settings ⬇️✨\n"
+f"For quick start Press 'Quick generation' or press 'Advanced generation' for Advanced Settings ⬇️✨\n"
 )
 
 description_ru =(
@@ -27,7 +27,7 @@ f"\n"
 f"📷 Чтобы получить лучший результат, отправьте чёткое фото с одним человеком. Яркое освещение — идеально! ✨\n"
 f"🎀 Идеально подходит для забавных правок, мемов или просто смеха! 💕\n"
 f"\n"
-f"Для быстрого старта нажмите Start Generation или нажмите Advanced Prompt Settings для Расширенных настроек ⬇️✨\n"
+f"Для быстрого старта нажмите 'Быстрая генерация' или нажмите 'Продвинутая генерация' для Расширенных настроек ⬇️✨\n"
 )
 
 def get_description(lang):

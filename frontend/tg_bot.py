@@ -11,6 +11,7 @@ from frontend.text_handler_functions import set_language_dialogue, if_in_generat
 from frontend.keyboards.menu_gen import menuConstructor
 
 from misc.descriptions import get_description
+from misc.lang_core import lang
 import json
 
 with open("frontend/about.json", "r", encoding="utf-8") as f:
@@ -38,7 +39,7 @@ async def cmd_start(message: Message):
     if users_data.get_user_language(message=message) is None:
         await cmd_language(message)
     else:
-        await message.answer(get_description(lang=users_data.get_user_language(message=message)), parse_mode="HTML", reply_markup=menuConstructor.get_menu("main_menu"))
+        await message.answer(get_description(lang=users_data.get_user_language(message=message)), parse_mode="HTML", reply_markup=menuConstructor.get_menu_with_lang(menu_name="main_menu", lang=users_data.get_user_language(message=message)))
 
 
 # Команда /language — Для выбора языка
@@ -61,6 +62,8 @@ async def cmd_about(message: Message):
 async def handle_photo(message: Message):
     if users_data.compare_self_state(message=message, state="start_generation"):
         await handle_photo_generation(message, eng_prompt)
+    elif users_data.compare_self_state(message=message, state="start_advanced_generation"):
+        await handle_photo_generation(message=message, prompt=users_data.get_user_prompt(message=message))
 
 
 # Обработка текстовых сообщений от пользователя
@@ -69,7 +72,7 @@ async def handle_text_from_user(message: Message):
     # Проверяем что пользователь находится в состоянии
     if users_data.compare_self_state(message=message, state="main"):
         await in_main_state(message=message)
-    elif users_data.compare_self_state(message=message, state="advanced_prompt"):
+    elif users_data.compare_self_state(message=message, state="in_advanced_prompt_generation"):
         await handle_advanced_prompt_selection(message)
     elif users_data.compare_self_state(message=message, state="set_lang"):
         await set_language_dialogue(message=message)
@@ -79,6 +82,7 @@ async def handle_text_from_user(message: Message):
 
     else:
         logging.info(msg=f"Пользователь {message.from_user.username}, потерялся :)")
+        await message.answer(text=lang.get(key="all_error", lang=users_data.get_user_language(message=message)))
 
 
 

@@ -20,6 +20,10 @@ class MenuConstructor:
     def get_menu(self, menu_name: str):
         return self.menus.get(menu_name)
 
+    def get_menu_with_lang(self, menu_name, lang):
+        new_menu_name = f"{menu_name}_{lang}"
+        return self.menus.get(new_menu_name)
+
     # Возвращает текст кнопки, по имени меню и ее индекса в списке
     def get_button_text(self, menu_name, index):
         return self.menu_list[menu_name][index]
