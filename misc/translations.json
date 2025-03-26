@@ -1,0 +1,24 @@
+{
+    "ru": {
+        "wait_generation": "⏳ Дождитесь конца генерации...\n⏱️ Если генерация занимает больше минуты (Что не должно быть) напишите /start",
+        "send_photo": "📷 Можете теперь отправить фото.",
+        "image_generation": "🎨 Генерация изображения...",
+        "image_ready": "✅ Ваше изображение сгенерированo!\n🔄 Чтобы начать заново, нажмите 'Быстрая генерация' или 'Продвинутая генерация'.",
+        "generation_interrupted": "⚠️ Генерация была прервана.\n🔄 Чтобы продолжить работу с ботом, выберите 'Быстрая генерация' или 'Продвинутая генерация' и начните заново.",
+        "choose_appearance": "🎭 Выберите Внешность Девочки \n⚠️ (Осторожней с выбором BBW...)\n⚠️ Я вас предупреждаю...",
+        "selection_confirm": "✅ Вы выбрали: {girl_type}\n📷 Можете теперь отправить фото.",
+        "invalid_selection": "❌ Пожалуйста, выберите один из предложенных вариантов.",
+        "all_error": "Что то пошло не так, нажмите /start"
+    },
+    "en": {
+        "wait_generation": "⏳ Please wait until the generation is complete...\n⏱️ If it takes more than a minute (which it shouldn't), type /start",
+        "send_photo": "📷 You can now send a photo.",
+        "image_generation": "🎨 Generating image...",
+        "image_ready": "✅ Your image has been generated!\n🔄 To start over, press 'Quick generation' or 'Advanced generation'.",
+        "generation_interrupted": "⚠️ Generation was interrupted.\n🔄 To continue, choose 'Quick generation' or 'Advanced generation' and restart.",
+        "choose_appearance": "🎭 Choose the girl's appearance\n⚠️ (Be careful with BBW...)\n⚠️ I'm warning you...",
+        "selection_confirm": "✅ You selected: {girl_type}\n📷 You can now send a photo.",
+        "invalid_selection": "❌ Please select one of the suggested options.",
+        "all_error": "Something went wrong, press /start"
+    }
+}

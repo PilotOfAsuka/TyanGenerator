@@ -1,4 +1,6 @@
-
 .env
 /.idea
 /__pycache__
+users_data.json
+__pycache__/
+*.pyc
