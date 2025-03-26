@@ -1,5 +1,5 @@
 description_eng = (
-f"🌸 Waify Snap Bot 🌸\n"
+f"🌸 Waifu Snap Bot 🌸\n"
 f"\n"
 f"✨ Want to add a cute girl to your photos? Just send a picture, and I'll do my magic! 🎀💖\n"
 f"\n"
@@ -15,7 +15,7 @@ f"For quick start Press 'Quick generation' or press 'Advanced generation' for Ad
 )
 
 description_ru =(
-f"🌸 Waify Snap Бот 🌸\n"
+f"🌸 Waifu Snap Бот 🌸\n"
 f"\n"
 f"✨ Хотите добавить милую девушку на свои фотографии? Просто отправьте фотографию, и я сделаю свое волшебство! 🎀💖\n"
 f"\n"
