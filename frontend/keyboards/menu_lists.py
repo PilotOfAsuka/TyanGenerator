@@ -4,6 +4,6 @@ menu_buttons_list = {
     "main_menu_ru": ["Быстрая генерация", "Продвинутая генерация", "language/язык"],
     "language": ["Русский", "English"],
     "girl_type_en": ["Asian", "Bikini", "Latina", "BBW" ],
-    "girl_type_ru": ["Азиатака", "Бикини", "Латинка", "BBW"],
+    "girl_type_ru": ["Азиатка", "Бикини", "Латинка", "BBW"],
     # Можно добавить больше списков в будущем
 }
