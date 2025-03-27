@@ -58,7 +58,7 @@ async def cmd_about(message: Message):
 
 
 # отправка промпта и фото в photo_handler.py
-@dp.message(lambda message: message.photo)
+@dp.message(lambda message: message.photo and len(message.photo) == 1)
 async def handle_photo(message: Message):
     if users_data.compare_self_state(message=message, state="start_generation"):
         await handle_photo_generation(message, eng_prompt)
