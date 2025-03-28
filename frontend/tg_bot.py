@@ -1,24 +1,19 @@
 import logging
 from aiogram.types import Message
 from aiogram.filters import Command
+from aiogram import F
 from frontend.photo_handler import handle_photo_generation  # переместил выше
-from misc.core import bot, dp  # core должен быть в корне проекта
-from frontend.advanced_prompt import handle_advanced_prompt_selection #мой advanced prompt selector
+from misc.core import bot, dp
+from frontend.advanced_prompt import handle_advanced_prompt_selection # Ruslan advanced prompt selector
 from tools.user_state_handler import users_data
 
 
 from frontend.text_handler_functions import set_language_dialogue, if_in_generation, in_main_state
 from frontend.keyboards.menu_gen import menuConstructor
 
-from misc.descriptions import get_description
+from misc.descriptions import get_description, get_about_text
 from misc.lang_core import lang
-import json
 
-with open("frontend/about.json", "r", encoding="utf-8") as f:
-    about_texts = json.load(f)
-
-def get_about_text(lang: str) -> str:
-    return about_texts.get(lang, about_texts["en"])  # fallback на англ
 
 # Промпт по умолчанию
 eng_prompt = "Add a realistically styled girlfriend standing next to the existing person in the image. Generate her appearance, clothing, and pose naturally to match the scene's lighting and perspective. Ensure her positioning, facial expression, and body language suggest a natural and affectionate connection, as if she belongs in the original photo."
@@ -26,7 +21,7 @@ eng_prompt = "Add a realistically styled girlfriend standing next to the existin
 # Настраиваем логирование
 logging.basicConfig(level=logging.INFO)
 
-
+albums = []
 
 # Команда /start — просто показывает описание
 @dp.message(Command("start"))
@@ -39,7 +34,8 @@ async def cmd_start(message: Message):
     if users_data.get_user_language(message=message) is None:
         await cmd_language(message)
     else:
-        await message.answer(get_description(lang=users_data.get_user_language(message=message)), parse_mode="HTML", reply_markup=menuConstructor.get_menu_with_lang(menu_name="main_menu", lang=users_data.get_user_language(message=message)))
+        await message.answer(get_description(lang=users_data.get_user_language(message=message)), parse_mode="HTML",
+                             reply_markup=menuConstructor.get_menu_with_lang(menu_name="main_menu", message=message))
 
 
 # Команда /language — Для выбора языка
@@ -52,18 +48,26 @@ async def cmd_language(message: Message):
 # Команда /about — Для about menu
 @dp.message(Command("about"))
 async def cmd_about(message: Message):
-    lang = users_data.get_user_language(message=message)
-    about_message = get_about_text(lang)
+    about_message = get_about_text(users_data.get_user_language(message=message))
     await message.answer(about_message)
 
 
 # отправка промпта и фото в photo_handler.py
-@dp.message(lambda message: message.photo and len(message.photo) == 1)
+@dp.message(F.photo)
 async def handle_photo(message: Message):
+    album = message.media_group_id
     if users_data.compare_self_state(message=message, state="start_generation"):
-        await handle_photo_generation(message, eng_prompt)
+        if not album:
+            await handle_photo_generation(message, eng_prompt)
+        else:
+            # Тут идет обработка когда отправлено много фото, НО он обрабатывет все (надо просто придумать как сделать иначе)
+            await message.answer(lang.get(key="many_photo_err", message=message))
     elif users_data.compare_self_state(message=message, state="start_advanced_generation"):
-        await handle_photo_generation(message=message, prompt=users_data.get_user_prompt(message=message))
+        if not album:
+            await handle_photo_generation(message=message, prompt=users_data.get_user_prompt(message=message))
+        else:
+            # Тут идет обработка когда отправлено много фото, НО он обрабатывет все (надо просто придумать как сделать иначе)
+            await message.answer(lang.get(key="many_photo_err", message=message))
 
 
 # Обработка текстовых сообщений от пользователя
@@ -82,9 +86,7 @@ async def handle_text_from_user(message: Message):
 
     else:
         logging.info(msg=f"Пользователь {message.from_user.username}, потерялся :)")
-        await message.answer(text=lang.get(key="all_error", lang=users_data.get_user_language(message=message)))
-
-
+        await message.answer(text=lang.get(key="all_error", message=message))
 
 # Запуск бота
 async def start():

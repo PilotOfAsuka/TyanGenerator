@@ -22,7 +22,7 @@ async def handle_photo_generation(message: Message, prompt: str):
 
     base64_image = base64.b64encode(image_bytes).decode("utf-8")
 
-    editable_msg = await message.answer(text=lang.get(key="image_generation", lang=users_data.get_user_language(message=message)))
+    editable_msg = await message.answer(text=lang.get(key="image_generation", message=message))
 
     users_data.set_user_state(message=message, state="ingeneration")
 
@@ -31,10 +31,16 @@ async def handle_photo_generation(message: Message, prompt: str):
     if generated_image:
         logging.info(f"[{user_id}] Успешно сгенерировано изображение для @{username}")
         users_data.set_user_state(message=message, state="main")
+        users_data.clear_custom_prompt(message=message)  # Очищаем промт юзера
         await editable_msg.delete()
-        await message.answer_photo(photo=generated_image, reply_markup=menuConstructor.get_menu_with_lang(menu_name="main_menu", lang=users_data.get_user_language(message=message)), caption=lang.get(key="image_ready",lang=users_data.get_user_language(message=message)))
+        await message.answer_photo(photo=generated_image,
+                                   reply_markup=menuConstructor.get_menu_with_lang(menu_name="main_menu", message=message),
+                                   caption=lang.get(key="image_ready", message=message))
     else:
         logging.error(f"[{user_id}] Ошибка генерации изображения для @{username}")
         users_data.set_user_state(message=message, state="main")
+        users_data.clear_custom_prompt(message=message)  # Очищаем промт юзера
         await editable_msg.delete()
-        await message.answer(text=lang.get(key="generation_interrupted", lang=users_data.get_user_language(message=message)), reply_markup=menuConstructor.get_menu_with_lang(menu_name="main_menu", lang=users_data.get_user_language(message=message)))
+        await message.answer(text=lang.get(key="generation_interrupted", message=message),
+                             reply_markup=menuConstructor.get_menu_with_lang(menu_name="main_menu",
+                                                                             message=message))

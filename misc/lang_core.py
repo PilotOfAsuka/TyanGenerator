@@ -1,4 +1,5 @@
 import json
+from tools.user_state_handler import users_data
 
 class LangEngine:
     def __init__(self, default_lang="ru", path="misc/translations.json"):
@@ -12,15 +13,10 @@ class LangEngine:
         except FileNotFoundError:
             return {}
 
-    def get(self, key, lang=None):
+    def get(self, key, message):
 
-        return self.translations.get(lang, {}).get(key, f"[{key}]")
+        return self.translations.get(users_data.get_user_language(message), {}).get(key, f"[{key}]")
 
-# Пример translations.json.json:
-# {
-#     "ru": {"hello": "Привет", "bye": "Пока"},
-#     "en": {"hello": "Hello", "bye": "Bye"}
-# }
 
 # Использование:
 lang = LangEngine(default_lang="en")

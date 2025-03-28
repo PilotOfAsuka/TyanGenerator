@@ -1,6 +1,7 @@
 from aiogram.types import (ReplyKeyboardMarkup,
                            KeyboardButton)
 from frontend.keyboards.menu_lists import menu_buttons_list
+from tools.user_state_handler import users_data
 
 
 # Класс конструктора меню
@@ -20,8 +21,8 @@ class MenuConstructor:
     def get_menu(self, menu_name: str):
         return self.menus.get(menu_name)
 
-    def get_menu_with_lang(self, menu_name, lang):
-        new_menu_name = f"{menu_name}_{lang}"
+    def get_menu_with_lang(self, menu_name, message):
+        new_menu_name = f"{menu_name}_{users_data.get_user_language(message)}"
         return self.menus.get(new_menu_name)
 
     # Возвращает текст кнопки, по имени меню и ее индекса в списке

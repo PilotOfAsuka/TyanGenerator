@@ -18,10 +18,10 @@ valid_options = {
 }
 
 async def handle_advanced_prompt(message):
-    users_data.set_user_state(message=message, state="in_advanced_prompt_generation")  # ✅ Установка состояния
+    users_data.set_user_state(message=message, state="in_advanced_prompt_generation")  # Установка состояния
     await message.answer(
-        text=lang.get(key="choose_appearance", lang=users_data.get_user_language(message=message)),
-        reply_markup=menuConstructor.get_menu_with_lang(menu_name="girl_type",lang=users_data.get_user_language(message=message))
+        text=lang.get(key="choose_appearance", message=message),
+        reply_markup=menuConstructor.get_menu_with_lang(menu_name="girl_type", message=message)
     )
 
 async def handle_advanced_prompt_selection(message):
@@ -31,10 +31,12 @@ async def handle_advanced_prompt_selection(message):
         final_prompt = prompt.format(girl_type=girl_type)
         users_data.set_user_state(message=message, state="start_advanced_generation")
         users_data.set_user_prompt(message=message, prompt=final_prompt)
-        await message.answer(text=lang.get(key="selection_confirm", lang=users_data.get_user_language(message=message)).format(girl_type=girl_type))
+        await message.answer(text=lang.get(key="selection_confirm", message=message).format(girl_type=girl_type))
+
 
        
         
     else:
-        await message.answer(text=lang.get(key="invalid_selection", lang=users_data.get_user_language(message=message)))
+        await message.answer(text=lang.get(key="invalid_selection", message=message),
+                             reply_markup=menuConstructor.get_menu_with_lang(menu_name="girl_type", message=message))
 

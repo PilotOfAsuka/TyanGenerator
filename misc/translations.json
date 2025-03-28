@@ -8,7 +8,8 @@
         "choose_appearance": "🎭 Выберите Внешность Девочки \n⚠️ (Осторожней с выбором BBW...)\n⚠️ Я вас предупреждаю...",
         "selection_confirm": "✅ Вы выбрали: {girl_type}\n📷 Можете теперь отправить фото.",
         "invalid_selection": "❌ Пожалуйста, выберите один из предложенных вариантов.",
-        "all_error": "Что то пошло не так, нажмите /start"
+        "all_error": "Что то пошло не так, нажмите /start",
+        "many_photo_err": "Вы отправили больше одного фото за раз, повторите еще раз, или вернитесь на /start"
     },
     "en": {
         "wait_generation": "⏳ Please wait until the generation is complete...\n⏱️ If it takes more than a minute (which it shouldn't), type /start",
@@ -19,6 +20,7 @@
         "choose_appearance": "🎭 Choose the girl's appearance\n⚠️ (Be careful with BBW...)\n⚠️ I'm warning you...",
         "selection_confirm": "✅ You selected: {girl_type}\n📷 You can now send a photo.",
         "invalid_selection": "❌ Please select one of the suggested options.",
-        "all_error": "Something went wrong, press /start"
+        "all_error": "Something went wrong, press /start",
+        "many_photo_err": "You sent more than one photo at once, please try again or return to /start"
     }
 }

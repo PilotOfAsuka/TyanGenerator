@@ -1,3 +1,5 @@
+import json
+
 description_eng = (
 f"🌸 Waifu Snap Bot 🌸\n"
 f"\n"
@@ -34,3 +36,9 @@ def get_description(lang):
     if lang == "ru": return description_ru
     elif lang == "en": return description_eng
     else: return "Not have a description" #Илья Плохо знает англиский...
+
+with open("misc/about.json", "r", encoding="utf-8") as f:
+    about_texts = json.load(f)
+
+def get_about_text(lang: str) -> str:
+    return about_texts.get(lang, about_texts["en"])  # fallback на англ

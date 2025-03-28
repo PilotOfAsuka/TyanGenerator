@@ -4,10 +4,11 @@ from io import BytesIO
 from aiogram.types import BufferedInputFile
 from google.genai.errors import ServerError
 from config import google_api
+import logging
 
 
 client = genai.Client(api_key=google_api)  # Экземпляр клиента для работы с Гуглом
-
+logging.basicConfig(level=logging.INFO)
 
 def get_tyan_image(base64_image, text_input):
     image = types.Part.from_bytes(data=base64_image, mime_type="image/jpeg")  # считываем картинку из ТГ
@@ -21,10 +22,9 @@ def get_tyan_image(base64_image, text_input):
             )
         )
         # Проверка ответа от гугла (Кривая на коленках)
-        print(response.candidates[0].finish_reason)
 
         if response is None:
-            print(f"Ответ от сервера пустой")
+            logging.info(msg=f"Ответ от сервера был пусто {response}")
         else:
             finish_reason = f"{response.candidates[0].finish_reason}"
 
@@ -33,7 +33,7 @@ def get_tyan_image(base64_image, text_input):
                     if part.inline_data is not None:
                         # Декодируем байты в изображение
                         image = BytesIO(part.inline_data.data)
-                        print(f"Картинка сгенерирована")
+                        logging.info(msg=f"Картинка сгенерирована")
                         image.seek(0)  # Обязательно перемещаем указатель в начало
 
                         # Готовим изображение для отправки в Telegram
