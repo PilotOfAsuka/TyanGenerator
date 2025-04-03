@@ -56,5 +56,9 @@ class UsersData:
         self.users_data[get_id_from_message(message)]["prompt"] = ""
         save_in_json(self.users_data, self.json_name)
 
+    # Возврашает количество юзеров
+    def get_unique_users_count(self):
+        return len(self.users_data)
+
 
 users_data = UsersData(json_name=users_data_file)
