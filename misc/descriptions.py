@@ -16,6 +16,7 @@ f"\n"
 f"By sending a photo, you confirm your consent to process the image. ✅\n"
 f"\n"
 f"For quick start Press 'Quick generation' or press 'Advanced generation' for Advanced Settings ⬇️✨\n"
+
 )
 
 
