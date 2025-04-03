@@ -8,7 +8,7 @@ from frontend.advanced_prompt import handle_advanced_prompt_selection # Ruslan a
 from tools.user_state_handler import users_data
 
 
-from frontend.text_handler_functions import set_language_dialogue, if_in_generation, in_main_state
+from frontend.text_handler_functions import set_language_dialogue, if_in_generation, in_main_state, back_to_main
 from frontend.keyboards.menu_gen import menuConstructor
 
 from misc.descriptions import get_description, get_about_text
@@ -83,6 +83,8 @@ async def handle_text_from_user(message: Message):
     # Проверяем что пользователь находится в состоянии генерации
     elif users_data.compare_self_state(message=message, state="ingeneration"):
         await if_in_generation(message=message)
+    elif users_data.compare_self_state(message=message, state="start_generation"):
+        await back_to_main(message=message)
 
     else:
         logging.info(msg=f"Пользователь {message.from_user.username}, потерялся :)")

@@ -13,7 +13,7 @@ class MenuConstructor:
     def create_menu(self):
         # Функция для создания ReplyKeyboardMarkup из списка кнопок
         for menu_name in self.menu_list:
-            buttons = [[KeyboardButton(text=button)] for button in self.menu_list[menu_name]]
+            buttons = [[KeyboardButton(text=button.capitalize())] for button in self.menu_list[menu_name]]
             menu = ReplyKeyboardMarkup(resize_keyboard=True, keyboard=buttons, one_time_keyboard=True)
             self.menus[menu_name] = menu
 
@@ -26,8 +26,8 @@ class MenuConstructor:
         return self.menus.get(new_menu_name)
 
     # Возвращает текст кнопки, по имени меню и ее индекса в списке
-    def get_button_text(self, menu_name, index):
-        return self.menu_list[menu_name][index]
+    def get_button_text(self, menu_name, index, message):
+        return self.menu_list[f"{menu_name}_{users_data.get_user_language(message)}"][index]
 
 
 menuConstructor = MenuConstructor(menu_list=menu_buttons_list) # Инициализация меню конструктора

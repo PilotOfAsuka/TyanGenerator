@@ -14,8 +14,14 @@ async def set_lang_and_answer(message, lang=None):
 
 logging.basicConfig(level=logging.INFO)
 
+async def back_to_main(message):
+    if message.text.lower() in menuConstructor.get_button_text(menu_name="back_button", index=0, message=message).lower():
+        users_data.set_user_state(message=message, state="main")  # Устанавливаем состаяние main базовое состояние
+        await message.answer(get_description(lang=users_data.get_user_language(message=message)), parse_mode="HTML",
+                             reply_markup=menuConstructor.get_menu_with_lang(menu_name="main_menu", message=message))
+
 async def if_in_generation(message):
-    await message.answer(text=lang.get(key="wait_generation", message=message)) # users_data.set_user_state(message=message, state="main")
+    await message.answer(text=lang.get(key="wait_generation", message=message))
 
 async def set_language_dialogue(message):
     if message.text.lower() == "русский":
@@ -26,21 +32,11 @@ async def set_language_dialogue(message):
         logging.info(msg=f"Ошибка установки языка пользователю {message.from_user.username}, message: {message.text}")
 
 async def in_main_state(message):
-    if message.text.lower() in {
-        menuConstructor.get_button_text(menu_name="main_menu_ru", index=0).lower(),
-        menuConstructor.get_button_text(menu_name="main_menu_en", index=0).lower()
-    }:
+    if message.text.lower() in menuConstructor.get_button_text(menu_name="main_menu", index=0, message=message).lower():
         users_data.set_user_state(message=message, state="start_generation")
-        await message.answer(text=lang.get(key="send_photo", message=message))
-    elif message.text.lower() in {
-        menuConstructor.get_button_text(menu_name="main_menu_ru", index=1).lower(),
-        menuConstructor.get_button_text(menu_name="main_menu_en", index=1).lower()
-    }:# Тут будет переход в состояние генерации Адванц промпт
+        await message.answer(text=lang.get(key="send_photo", message=message),  reply_markup=menuConstructor.get_menu_with_lang(menu_name="back_button", message=message))
+    elif message.text.lower() in menuConstructor.get_button_text(menu_name="main_menu", index=1, message=message).lower():# Тут будет переход в состояние генерации Адванц промпт
         await handle_advanced_prompt(message)
-
-    elif message.text.lower() in {
-        menuConstructor.get_button_text(menu_name="main_menu_ru", index=2).lower(),
-        menuConstructor.get_button_text(menu_name="main_menu_en", index=2).lower()
-    }:
+    elif message.text.lower() in menuConstructor.get_button_text(menu_name="main_menu_en", index=2, message=message).lower():
         users_data.set_user_state(message=message, state="set_lang")
         await message.answer("Выберите язык / Choose your language:", reply_markup=menuConstructor.get_menu("language"))
