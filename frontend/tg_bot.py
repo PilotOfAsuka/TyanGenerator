@@ -16,7 +16,8 @@ from misc.lang_core import lang
 
 
 # Промпт по умолчанию
-eng_prompt = "Add a realistically styled girlfriend standing next to the existing person in the image. Generate her appearance, clothing, and pose naturally to match the scene's lighting and perspective. Ensure her positioning, facial expression, and body language suggest a natural and affectionate connection, as if she belongs in the original photo."
+eng_prompt_old = "Add a realistically styled girlfriend standing next to the existing person in the image. Generate her appearance, clothing, and pose naturally to match the scene's lighting and perspective. Ensure her positioning, facial expression, and body language suggest a natural and affectionate connection, as if she belongs in the original photo."
+eng_prompt = "Preserve the original person in the photo exactly as they are. Do not change their face, body, hairstyle, or clothing. Only add a realistically styled girlfriend standing naturally next to them. She should match the scene’s lighting, perspective, and background.Her body language and facial expression should suggest a warm and affectionate connection,as if she belongs in the original photo."
 
 # Настраиваем логирование
 logging.basicConfig(level=logging.INFO)
