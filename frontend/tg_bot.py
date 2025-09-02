@@ -56,7 +56,7 @@ async def cmd_about(message: Message):
 @dp.message(F.photo)
 async def handle_photo(message: Message):
     album = message.media_group_id
-    if users_data.compare_self_state(message=message, state="start_generation"):
+    if users_data.compare_self_state(message=message, state="ready_to_generation"):
         if not album:
             await handle_photo_for_generation(message, users_data.get_user_prompt(message=message))
         else:
@@ -76,8 +76,12 @@ async def handle_text_from_user(message: Message):
     # Проверяем что пользователь находится в состоянии генерации
     elif users_data.compare_self_state(message=message, state="ingeneration"):
         await if_in_generation(message=message)
-    elif users_data.compare_self_state(message=message, state="start_generation"):
+    elif users_data.compare_self_state(message=message, state="ready_to_generation"):
         await back_to_main(message=message)
+    elif users_data.compare_self_state(message=message, state="get_advance_prompt"):
+        users_data.set_user_prompt(message=message, prompt=message.text)
+        await message.answer(lang.get(message=message, key="send_photo"), reply_markup=menuConstructor.get_menu_with_lang(message=message, menu_name="back_button"))
+        users_data.set_user_state(message=message, state="ready_to_generation")
 
     else:
         logging.info(msg=f"Пользователь {message.from_user.username}, потерялся :)")
