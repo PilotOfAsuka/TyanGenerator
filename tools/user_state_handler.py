@@ -31,7 +31,7 @@ class UsersData:
     # Возвращает Тру или Фолс если state совпадает с текущим состоянием
     def compare_self_state(self, message, state):
         # Эта функция нужна для того чтобы убеждатся что пользователь действительно
-        # Находиться на том этапе который нам нужен
+        # находится на том этапе который нам нужен
         return True if self.get_user_state(message=message) == state else False
 
     # Возвращает "language" из users_data

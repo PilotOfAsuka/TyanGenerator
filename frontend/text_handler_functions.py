@@ -1,7 +1,7 @@
 from backend.prompts import add_boyfriend_prompt, add_girlfriend_prompt
 
 from tools.user_state_handler import users_data
-from misc.descriptions import get_description
+from misc.descriptions import get_description, get_about_text
 import logging
 from frontend.keyboards.menu_gen import menuConstructor
 from misc.lang_core import lang
@@ -37,6 +37,7 @@ async def in_main_state(message):
     await is_press_button(message=message, menu_name="main_menu", button_index=1, set_user_state="ready_to_generation", set_user_prompt=add_boyfriend_prompt,  answer_text=lang.get(message=message, key="send_photo"), reply_markup=menuConstructor.get_menu_with_lang(message=message, menu_name="back_button"))
     await is_press_button(message=message, menu_name="main_menu", button_index=2, set_user_state="get_advance_prompt", answer_text="Отправь текст промпта:", reply_markup=menuConstructor.get_menu_with_lang(message=message, menu_name="back_button"))
     await is_press_button(message=message, menu_name="main_menu", button_index=3, set_user_state="set_lang", answer_text="Выберите язык / Choose your language:", reply_markup=menuConstructor.get_menu("language"))
+    await is_press_button(message=message, menu_name="main_menu", button_index=4, answer_text=get_about_text(users_data.get_user_language(message=message)))
 
 async def is_press_button(message, menu_name: str, button_index: int, set_user_state=None, set_user_prompt=None, answer_text=None, reply_markup=None):
     button_text = menuConstructor.get_button_text(menu_name=menu_name, index=button_index, message=message).lower()
