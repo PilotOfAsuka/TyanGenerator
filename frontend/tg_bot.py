@@ -2,9 +2,8 @@ import logging
 from aiogram.types import Message
 from aiogram.filters import Command
 from aiogram import F
-from frontend.photo_handler import handle_photo_generation  # переместил выше
+from frontend.photo_handler import handle_photo_for_generation  # переместил выше
 from misc.core import bot, dp
-from frontend.advanced_prompt import handle_advanced_prompt_selection # Ruslan advanced prompt selector
 from tools.user_state_handler import users_data
 
 
@@ -59,16 +58,11 @@ async def handle_photo(message: Message):
     album = message.media_group_id
     if users_data.compare_self_state(message=message, state="start_generation"):
         if not album:
-            await handle_photo_generation(message, eng_prompt)
+            await handle_photo_for_generation(message, users_data.set_user_prompt())
         else:
-            # Тут идет обработка когда отправлено много фото, НО он обрабатывет все (надо просто придумать как сделать иначе)
+            # Тут идет обработка когда отправлено много фото, НО он обрабатывает все (надо просто придумать как сделать иначе)
             await message.answer(lang.get(key="many_photo_err", message=message))
-    elif users_data.compare_self_state(message=message, state="start_advanced_generation"):
-        if not album:
-            await handle_photo_generation(message=message, prompt=users_data.get_user_prompt(message=message))
-        else:
-            # Тут идет обработка когда отправлено много фото, НО он обрабатывет все (надо просто придумать как сделать иначе)
-            await message.answer(lang.get(key="many_photo_err", message=message))
+
 
 
 # Обработка текстовых сообщений от пользователя
@@ -77,8 +71,6 @@ async def handle_text_from_user(message: Message):
     # Проверяем что пользователь находится в состоянии
     if users_data.compare_self_state(message=message, state="main"):
         await in_main_state(message=message)
-    elif users_data.compare_self_state(message=message, state="in_advanced_prompt_generation"):
-        await handle_advanced_prompt_selection(message)
     elif users_data.compare_self_state(message=message, state="set_lang"):
         await set_language_dialogue(message=message)
     # Проверяем что пользователь находится в состоянии генерации

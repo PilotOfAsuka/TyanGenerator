@@ -1,6 +1,6 @@
 import base64
 import logging
-from backend.gemineai import get_tyan_image
+from backend.gemineai import edit_image_with_prompt
 from aiogram.types import Message
 from tools.my_func import get_id_from_message
 from misc.core import bot
@@ -10,9 +10,9 @@ from tools.user_state_handler import users_data
 from misc.lang_core import lang
 
 
-async def handle_photo_generation(message: Message, prompt: str):
+async def handle_photo_for_generation(message: Message, prompt: str):
     user_id = get_id_from_message(message)
-    username = message.from_user.username or "NoUsername"
+    username = message.from_user.username  or message.from_user.first_name or message.from_user.id or "NoUsername"
     logging.info(f"[{user_id}] Получено изображение от пользователя @{username}")
 
     photo = message.photo[-1]
@@ -26,7 +26,7 @@ async def handle_photo_generation(message: Message, prompt: str):
 
     users_data.set_user_state(message=message, state="ingeneration")
 
-    generated_image = get_tyan_image(base64_image=base64_image, text_input=prompt)
+    generated_image = edit_image_with_prompt(base64_image=base64_image, prompt_text_input=prompt)
 
     if generated_image:
         logging.info(f"[{user_id}] Успешно сгенерировано изображение для @{username}")

@@ -1,8 +1,9 @@
+from backend.prompts import add_boyfriend_prompt, add_girlfriend_prompt
+
 from tools.user_state_handler import users_data
 from misc.descriptions import get_description
 import logging
 from frontend.keyboards.menu_gen import menuConstructor
-from frontend.advanced_prompt import handle_advanced_prompt
 from misc.lang_core import lang
 
 async def set_lang_and_answer(message, lang=None):
@@ -34,9 +35,13 @@ async def set_language_dialogue(message):
 async def in_main_state(message):
     if message.text.lower() in menuConstructor.get_button_text(menu_name="main_menu", index=0, message=message).lower():
         users_data.set_user_state(message=message, state="start_generation")
+        users_data.set_user_prompt(message=message,prompt=add_girlfriend_prompt)
         await message.answer(text=lang.get(key="send_photo", message=message),  reply_markup=menuConstructor.get_menu_with_lang(menu_name="back_button", message=message))
-    elif message.text.lower() in menuConstructor.get_button_text(menu_name="main_menu", index=1, message=message).lower():# Тут будет переход в состояние генерации Адванц промпт
-        await handle_advanced_prompt(message)
-    elif message.text.lower() in menuConstructor.get_button_text(menu_name="main_menu_en", index=2, message=message).lower():
+    if message.text.lower() in menuConstructor.get_button_text(menu_name="main_menu", index=1, message=message).lower():
+        users_data.set_user_state(message=message, state="start_generation")
+        users_data.set_user_prompt(message=message, prompt=add_boyfriend_prompt)
+        await message.answer(text=lang.get(key="send_photo", message=message),  reply_markup=menuConstructor.get_menu_with_lang(menu_name="back_button", message=message))
+
+    elif message.text.lower() in menuConstructor.get_button_text(menu_name="main_menu_en", index=3, message=message).lower():
         users_data.set_user_state(message=message, state="set_lang")
         await message.answer("Выберите язык / Choose your language:", reply_markup=menuConstructor.get_menu("language"))
