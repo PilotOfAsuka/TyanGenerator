@@ -79,10 +79,10 @@ async def handle_text_from_user(message: Message):
     elif users_data.compare_self_state(message=message, state="ready_to_generation"):
         await back_to_main(message=message)
     elif users_data.compare_self_state(message=message, state="get_advance_prompt"):
-        await back_to_main(message=message)
-        users_data.set_user_prompt(message=message, prompt=message.text)
-        await message.answer(lang.get(message=message, key="send_photo"), reply_markup=menuConstructor.get_menu_with_lang(message=message, menu_name="back_button"))
-        users_data.set_user_state(message=message, state="ready_to_generation")
+        if not await back_to_main(message=message):
+            users_data.set_user_prompt(message=message, prompt=message.text)
+            await message.answer(lang.get(message=message, key="send_photo"), reply_markup=menuConstructor.get_menu_with_lang(message=message, menu_name="back_button"))
+            users_data.set_user_state(message=message, state="ready_to_generation")
 
     else:
         logging.info(msg=f"Пользователь {message.from_user.username}, потерялся :)")

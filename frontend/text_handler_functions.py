@@ -20,6 +20,8 @@ async def back_to_main(message):
         users_data.set_user_state(message=message, state="main")  # Устанавливаем состаяние main базовое состояние
         await message.answer(get_description(lang=users_data.get_user_language(message=message)), parse_mode="HTML",
                              reply_markup=menuConstructor.get_menu_with_lang(menu_name="main_menu", message=message))
+        return True
+    return False
 
 async def if_in_generation(message):
     await message.answer(text=lang.get(key="wait_generation", message=message))
