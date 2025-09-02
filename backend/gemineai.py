@@ -10,12 +10,16 @@ import logging
 client = genai.Client(api_key=google_api)  # Экземпляр клиента для работы с Гуглом
 logging.basicConfig(level=logging.INFO)
 
+model_2_5 = "gemini-2.5-flash-image-preview"
+model_2_0_old = "gemini-2.0-flash-exp-image-generation"
+model_2_0 = "gemini-2.0-flash-preview-image-generation"
+
 def edit_image_with_prompt(base64_image, prompt_text_input):
     image = types.Part.from_bytes(data=base64_image, mime_type="image/jpeg")  # считываем картинку из ТГ
     try:
         # Формируем запрос для гугла
         response = client.models.generate_content(
-            model="gemini-2.0-flash-exp-image-generation",
+            model=model_2_0,
             contents=[prompt_text_input, image],
             config=types.GenerateContentConfig(
                 response_modalities=['Text', 'Image']
