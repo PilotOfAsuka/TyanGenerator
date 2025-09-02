@@ -42,6 +42,6 @@ async def in_main_state(message):
         users_data.set_user_prompt(message=message, prompt=add_boyfriend_prompt)
         await message.answer(text=lang.get(key="send_photo", message=message),  reply_markup=menuConstructor.get_menu_with_lang(menu_name="back_button", message=message))
 
-    elif message.text.lower() in menuConstructor.get_button_text(menu_name="main_menu_en", index=3, message=message).lower():
+    elif message.text.lower() in menuConstructor.get_button_text(menu_name="main_menu", index=3, message=message).lower():
         users_data.set_user_state(message=message, state="set_lang")
         await message.answer("Выберите язык / Choose your language:", reply_markup=menuConstructor.get_menu("language"))
