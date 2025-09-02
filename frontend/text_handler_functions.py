@@ -33,13 +33,14 @@ async def set_language_dialogue(message):
         logging.info(msg=f"Ошибка установки языка пользователю {message.from_user.username}, message: {message.text}")
 
 async def in_main_state(message):
-    print(await is_press_button(message=message, menu_name="main_menu", button_index=0, set_user_state="start_generation", set_user_prompt=add_girlfriend_prompt))
+    await is_press_button(message=message, menu_name="main_menu", button_index=0, set_user_state="start_generation", set_user_prompt=add_girlfriend_prompt)
     await is_press_button(message=message, menu_name="main_menu", button_index=1, set_user_state="start_generation", set_user_prompt=add_boyfriend_prompt)
     await is_press_button(message=message, menu_name="main_menu", button_index=2, set_user_state="main", answer_text="Скоро добавлю")
     await is_press_button(message=message, menu_name="main_menu", button_index=3, set_user_state="set_lang", answer_text="Выберите язык / Choose your language:", reply_markup=menuConstructor.get_menu("language"))
 
 async def is_press_button(message, menu_name: str, button_index: int, set_user_state=None, set_user_prompt=None, answer_text=None, reply_markup=None):
-    if message.text.lower() is menuConstructor.get_button_text(menu_name=menu_name, index=button_index, message=message).lower():
+    button_text = menuConstructor.get_button_text(menu_name=menu_name, index=button_index, message=message).lower()
+    if message.text.lower() == button_text:
         if set_user_state:
             users_data.set_user_state(message=message, state=set_user_state)
         if set_user_prompt:
