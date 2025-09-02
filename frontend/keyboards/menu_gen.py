@@ -27,7 +27,7 @@ class MenuConstructor:
 
     # Возвращает текст кнопки, по имени меню и ее индекса в списке
     def get_button_text(self, menu_name, index, message):
-        return self.menu_list[f"{menu_name}_{users_data.get_user_language(message)}"][index]
+        return self.menu_list[f"{menu_name}_{users_data.get_user_language(message)}"][index].lower()
 
 
 menuConstructor = MenuConstructor(menu_list=menu_buttons_list) # Инициализация меню конструктора
