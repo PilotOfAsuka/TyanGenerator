@@ -19,7 +19,7 @@ def edit_image_with_prompt(base64_image, prompt_text_input):
     try:
         # Формируем запрос для гугла
         response = client.models.generate_content(
-            model=model_2_0,
+            model=model_2_5,
             contents=[prompt_text_input, image],
             config=types.GenerateContentConfig(
                 response_modalities=['Text', 'Image']
