@@ -58,7 +58,7 @@ async def handle_photo(message: Message):
     album = message.media_group_id
     if users_data.compare_self_state(message=message, state="start_generation"):
         if not album:
-            await handle_photo_for_generation(message, users_data.set_user_prompt())
+            await handle_photo_for_generation(message, users_data.get_user_prompt())
         else:
             # Тут идет обработка когда отправлено много фото, НО он обрабатывает все (надо просто придумать как сделать иначе)
             await message.answer(lang.get(key="many_photo_err", message=message))
